@@ -12,21 +12,52 @@ import java.util.Random;
  * @author Alex Van Dijck on 16/05/2020
  * @project helloarduino
  */
-public class SnakeModel {
+public class Spel {
 
-
+    private GridCell fruit;
+    Snake snake;
 
     private int richting, score;
     //Int richting 0 = boven; 1 = rechts; 2 = onder; 3 = links;
     private boolean klaar;
     private Random rand;
 
-    public SnakeModel() {
+    public Spel() {
 
         this.richting = 0;
         this.klaar = false;
         this.rand = new Random();
         this.score = 0;
+        this.snake = new Snake();
+
+    }
+
+    public void overInput(byte oneByte){
+        if(!isKlaar()) {
+            if ((char) oneByte == 'T') {
+
+                System.out.println(richting);
+                switch(richting){
+                    case 0:
+                        snake.beweegVooruit();
+                        break;
+                    case 1:
+                        snake.beweegLinks();
+                        break;
+                    case 2:
+                        snake.beweegOnder();
+                        break;
+                    case 3:
+                        snake.beweegRechts();
+                        break;
+                }
+
+            }else{
+
+                input((char)oneByte);
+
+            }
+        }
     }
 
     public void input (char c){
@@ -44,6 +75,8 @@ public class SnakeModel {
         }
 
     }
+
+
     private void rechts(){
 
         switch(richting){
@@ -68,20 +101,8 @@ public class SnakeModel {
 
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public int getRichting() {
         return richting;
-    }
-
-    public void setRichting(int richting) {
-        this.richting = richting;
     }
 
     public boolean isKlaar() {
@@ -92,12 +113,20 @@ public class SnakeModel {
         this.klaar = klaar;
     }
 
-    public Random getRand() {
-        return rand;
+    public GridCell getFruit() {
+        return fruit;
     }
 
-    public void setRand(Random rand) {
-        this.rand = rand;
+    public void setFruit(GridCell fruit) {
+        this.fruit = fruit;
+    }
+
+    public Snake getSnake() {
+        return snake;
+    }
+
+    public void setSnake(Snake snake) {
+        this.snake = snake;
     }
 }
 

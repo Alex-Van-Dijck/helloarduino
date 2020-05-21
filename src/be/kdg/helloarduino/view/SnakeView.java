@@ -1,22 +1,19 @@
 package be.kdg.helloarduino.view;
 
-import be.kdg.helloarduino.model.SnakeModel;
+import be.kdg.helloarduino.model.Spel;
 import javafx.geometry.Insets;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 public class SnakeView extends GridPane {
 
-//    Rectangle hoofd,punt;
-    private SnakeModel snakeModel;
+
+    private Spel spel;
     private ImageView hoofd, punt, body;
     private Random rand = new Random();
     private List<Integer> slangListX, slangListY;
@@ -49,9 +46,6 @@ public class SnakeView extends GridPane {
         body.setFitHeight(20);
         body.setFitWidth(20);
 
-//        Rectangle hoofd = new Rectangle(20,20, Color.BLUE);
-//        Rectangle punt = new Rectangle(20,20,Color.YELLOW);
-
         for (int i = 0; i < 20 ; i++) {
             RowConstraints con = new RowConstraints();
             con.setPrefHeight(20);
@@ -68,8 +62,6 @@ public class SnakeView extends GridPane {
     private void layoutNodes() {
         this.setBackground(new Background(new BackgroundFill(Color.YELLOWGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
 //        this.setGridLinesVisible(true);
-        this.add(hoofd,slangX,slangY);
-        this.add(punt, puntX, puntY);
 
 
     }
@@ -94,6 +86,14 @@ public class SnakeView extends GridPane {
         return puntY;
     }
 
+    public ImageView getHoofd() {
+        return hoofd;
+    }
+
+    public ImageView getPunt() {
+        return punt;
+    }
+
     public void setHoofdSlang(int X, int Y){
 
         oudSlangX = slangX;
@@ -105,67 +105,12 @@ public class SnakeView extends GridPane {
         this.add(hoofd,slangX,slangY);
 
     }
-    void beweegVooruit(){
-        setOud();
 
-
-        if(slangX == puntX && slangY == puntY){
-            generateFruit();
-            addTail();
-        }
-        slangY = slangY - 1;
-        beweeg();
-    }
-    void beweegLinks(){
-        setOud();
-
-        if(slangX == puntX && slangY == puntY){
-            generateFruit();
-            addTail();
-        }
-
-        slangX = slangX - 1;
-        beweeg();
-
-    }
-    void beweegOnder(){
-        setOud();
-
-        if(slangX == puntX && slangY == puntY){
-            generateFruit();
-            addTail();
-        }
-
-        slangY = slangY + 1;
-
-        if(slangX > 19){
-            snakeModel.setKlaar(true);
-        }
-        beweeg();
-    }
-    void beweegRechts(){
-        setOud();
-
-
-        if(slangX == puntX && slangY == puntY){
-            generateFruit();
-            addTail();
-        }
-
-        slangX = slangX + 1;
-
-        if(slangX > 19){
-            snakeModel.setKlaar(true);
-        }else {
-            beweeg();
-        }
-
-    }
+    
     private void generateFruit(){
-        puntX = rand.nextInt(20);
-        puntY = rand.nextInt(20);
+
     }
-    private void beweeg(){
+    private void draw(){
         this.getChildren().clear();
         this.add(hoofd,slangX,slangY);
 

@@ -1,23 +1,23 @@
 package be.kdg.helloarduino.view;
 
 import be.kdg.helloarduino.model.SerialArduinoConnection;
-import be.kdg.helloarduino.model.SnakeModel;
+import be.kdg.helloarduino.model.Snake;
+import be.kdg.helloarduino.model.Spel;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 
 public class SnakePresenter implements SerialPortDataListener {
     private SerialArduinoConnection model;
     private SnakeView view;
-    private SnakeModel snakeModel;
+    private Spel spel;
+    private Snake snake;
 
     public SnakePresenter(SerialArduinoConnection model, SnakeView view) {
         this.model = model;
         this.view = view;
-        this.snakeModel = new SnakeModel();
+        this.spel = new Spel();
         addEventListeners();
         model.addDatalistener(this);
     }
@@ -43,33 +43,19 @@ public class SnakePresenter implements SerialPortDataListener {
             public void run() {
                 for (byte oneByte : model.receiveBytes()) {
 
-                    if(!snakeModel.isKlaar()) {
-                        if ((char) oneByte == 'T') {
+                    spel.overInput(oneByte);
+                    drawSnake();
 
-                            System.out.println(snakeModel.getRichting());
-                            switch(snakeModel.getRichting()){
-                                case 0:
-                                    view.beweegVooruit();
-                                    break;
-                                case 1:
-                                    view.beweegLinks();
-                                    break;
-                                case 2:
-                                    view.beweegOnder();
-                                    break;
-                                case 3:
-                                    view.beweegRechts();
-                                    break;
-                            }
-
-                        }else{
-
-                            snakeModel.input((char)oneByte);
-
-                        }
-                    }
                 }
             }
         });
+    }
+
+    public void drawSnake(){
+        view.getChildren().clear();
+        Snake snake = spel.getSnake();
+        for(int i = 0; i < snake.getSnakeBodies().size(); i++){
+            view.add(view.getHoofd(), snake.getSnakeBodies().get(i).getBodyX(),snake.getSnakeBodies().get(i).getBodyY());
+        }
     }
 }
