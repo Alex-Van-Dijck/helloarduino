@@ -16,10 +16,11 @@ public class Spel {
 
     private GridCell fruit;
     Snake snake;
+    SerialArduinoConnection serial;
 
-    private int richting, score;
+    private int richting;
     //Int richting 0 = boven; 1 = rechts; 2 = onder; 3 = links;
-    private boolean klaar;
+    private boolean klaar, score, getoond;
     private Random rand;
 
     public Spel() {
@@ -27,28 +28,40 @@ public class Spel {
         this.richting = 0;
         this.klaar = false;
         this.rand = new Random();
-        this.score = 0;
+        this.score = false;
+        this.getoond = false;
         this.snake = new Snake();
+        this.fruit = new GridCell(rand.nextInt(20),rand.nextInt(20));
 
     }
 
     public void overInput(byte oneByte){
-        if(!isKlaar()) {
+
+        isGameOver();
+
             if ((char) oneByte == 'T') {
 
                 System.out.println(richting);
                 switch(richting){
                     case 0:
-                        snake.beweegVooruit();
+                        if(!snake.beweegVooruit(fruit)){
+                            generateFruit();
+                        }
                         break;
                     case 1:
-                        snake.beweegLinks();
+                        if(!snake.beweegLinks(fruit)){
+                            generateFruit();
+                        }
                         break;
                     case 2:
-                        snake.beweegOnder();
+                        if(!snake.beweegOnder(fruit)){
+                            generateFruit();
+                        }
                         break;
                     case 3:
-                        snake.beweegRechts();
+                        if(!snake.beweegRechts(fruit)){
+                            generateFruit();
+                        }
                         break;
                 }
 
@@ -57,10 +70,24 @@ public class Spel {
                 input((char)oneByte);
 
             }
-        }
     }
 
-    public void input (char c){
+    public void isGameOver(){
+
+        for (int i = 1; i < snake.getSnakeBodies().size() - 1; i++) {
+            if (snake.getHoofd().getBodyX() == snake.getSnakeBodies().get(i).getBodyX() && snake.getHoofd().getBodyY() == snake.getSnakeBodies().get(i).getBodyY()  ) {
+                klaar = true;
+                System.out.println("Het spel is afgelopen, je bent tegen jezelf gebotst");
+            }
+        }
+        if(snake.getHoofd().getBodyX() == 20 || snake.getHoofd().getBodyX() < 0 || snake.getHoofd().getBodyY() == 20|| snake.getHoofd().getBodyY() < 0 ){
+            klaar = true;
+            System.out.println("Het spel is afgelopen, je bent buiten het veld gegaan");
+        }
+
+    }
+
+    private void input(char c){
 
         switch(c){
             case 'L':
@@ -76,6 +103,25 @@ public class Spel {
 
     }
 
+    private void generateFruit(){
+
+        score = true;
+        boolean fruitTest = false;
+
+        while(!fruitTest) {
+            fruit = new GridCell(rand.nextInt(20), rand.nextInt(20));
+            for (int i = 0; i < snake.getSnakeBodies().size() - 1; i++) {
+                if (fruit.getBodyX() == snake.getSnakeBodies().get(i).getBodyX() && fruit.getBodyY() == snake.getSnakeBodies().get(i).getBodyY()  ) {
+                    fruitTest = false;
+                    System.out.println("Rerolling fruit");
+                }else{
+                    fruitTest = true;
+                }
+            }
+
+        }
+
+    }
 
     private void rechts(){
 
@@ -101,12 +147,28 @@ public class Spel {
 
     }
 
+    public boolean isScore() {
+        return score;
+    }
+
+    public boolean isGetoond() {
+        return getoond;
+    }
+
+    public void setScore(boolean score) {
+        this.score = score;
+    }
+
     public int getRichting() {
         return richting;
     }
 
     public boolean isKlaar() {
         return klaar;
+    }
+
+    public void setGetoond(boolean getoond) {
+        this.getoond = getoond;
     }
 
     public void setKlaar(boolean klaar) {

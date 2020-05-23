@@ -19,11 +19,6 @@ public class SnakeView extends GridPane {
     private List<Integer> slangListX, slangListY;
     private int slangX = 10;
     private int slangY = 10;
-    private int oudSlangX;
-    private int oudSlangY;
-    private int puntX;
-    private int puntY;
-    int vorigeX, vorigeY, vorigeX2, vorigeY2;
 
     public SnakeView() {
         initialiseNodes();
@@ -33,14 +28,10 @@ public class SnakeView extends GridPane {
     private void initialiseNodes() {
 
 
-        generateFruit();
         slangListX = new ArrayList<Integer>();
         slangListY = new ArrayList<Integer>();
-        hoofd = new ImageView("/Images/blu.png");
         punt = new ImageView("/Images/strawberry.png");
         body = new ImageView("/Images/lightBlu.png");
-        hoofd.setFitWidth(20);
-        hoofd.setFitHeight(20);
         punt.setFitWidth(20);
         punt.setFitHeight(20);
         body.setFitHeight(20);
@@ -69,72 +60,20 @@ public class SnakeView extends GridPane {
 
     //Getters & Setters
 
-
-    public int getSlangX() {
-        return slangX;
-    }
-
-    public int getSlangY() {
-        return slangY;
-    }
-
-    public int getPuntX() {
-        return puntX;
-    }
-
-    public int getPuntY() {
-        return puntY;
-    }
-
     public ImageView getHoofd() {
-        return hoofd;
+
+        hoofd = new ImageView("/Images/blu.png");
+        hoofd.setFitWidth(20);
+        hoofd.setFitHeight(20);
+        return  hoofd;
     }
 
     public ImageView getPunt() {
         return punt;
     }
 
-    public void setHoofdSlang(int X, int Y){
 
-        oudSlangX = slangX;
-        oudSlangY = slangY;
 
-        slangX = X;
-        slangY = Y;
 
-        this.add(hoofd,slangX,slangY);
 
-    }
-
-    
-    private void generateFruit(){
-
-    }
-    private void draw(){
-        this.getChildren().clear();
-        this.add(hoofd,slangX,slangY);
-
-        for (int i = 0 ; i < slangListX.size(); i++){
-
-            this.add(body, slangListX.get(i), slangListY.get(i));
-
-        }
-
-        this.add(punt,puntX,puntY);
-        System.out.println("X: " + slangX + " Y: " + slangY);
-        System.out.println("ListX: " + slangListX);
-        System.out.println("ListY: " + slangListY);
-    }
-    private void addTail() {
-
-        slangListX.add(puntX);
-        slangListY.add(puntY);
-
-    }
-    private void setOud(){
-
-        oudSlangY = slangY;
-        oudSlangX = slangX;
-
-    }
 }

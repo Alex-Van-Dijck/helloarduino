@@ -7,6 +7,8 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 public class SnakePresenter implements SerialPortDataListener {
     private SerialArduinoConnection model;
@@ -43,8 +45,25 @@ public class SnakePresenter implements SerialPortDataListener {
             public void run() {
                 for (byte oneByte : model.receiveBytes()) {
 
-                    spel.overInput(oneByte);
-                    drawSnake();
+                    if(!spel.isGetoond()){
+                        if(!spel.isKlaar()) {
+                            spel.overInput(oneByte);
+                            drawSnake();
+                        }else{
+                            Alert alert = new Alert(Alert.AlertType.WARNING);
+                            alert.setHeaderText("Het spel is afgelopen!");
+                            spel.setGetoond(true);
+                            alert.showAndWait();
+                        }
+                    }
+
+
+
+
+                    if(spel.isScore()){
+                        model.sendString("S");
+                        spel.setScore(false);
+                    }
 
                 }
             }
@@ -54,8 +73,16 @@ public class SnakePresenter implements SerialPortDataListener {
     public void drawSnake(){
         view.getChildren().clear();
         Snake snake = spel.getSnake();
-        for(int i = 0; i < snake.getSnakeBodies().size(); i++){
-            view.add(view.getHoofd(), snake.getSnakeBodies().get(i).getBodyX(),snake.getSnakeBodies().get(i).getBodyY());
+
+        try {
+            for (int i = 0; i < snake.getSnakeBodies().size(); i++) {
+                if(snake.getSnakeBodies().get(i).getBodyX() < 19 || snake.getSnakeBodies().get(i).getBodyY() < 19){
+                    view.add(view.getHoofd(), snake.getSnakeBodies().get(i).getBodyX(), snake.getSnakeBodies().get(i).getBodyY());
+                }
+            }
+        }catch (IllegalArgumentException ex){
+            System.out.println("De slang is buiten het speelveld dus het spel is afgelopen.");
         }
+        view.add(view.getPunt(), spel.getFruit().getBodyX(),spel.getFruit().getBodyY());
     }
 }

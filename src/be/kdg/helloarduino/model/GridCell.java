@@ -28,6 +28,11 @@ public class GridCell {
     public void setBodyY(int bodyY) {
         this.bodyY = bodyY;
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }
 
 
